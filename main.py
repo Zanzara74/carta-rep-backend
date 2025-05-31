@@ -1,10 +1,26 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 import requests
 from utils.graph_auth import acquire_token
 
 app = FastAPI()
 
-USER_EMAIL = "alfredo@cartarep.com"  # Replace with your email if needed
+# Lista degli origin consentiti - modifica con i tuoi URL frontend
+origins = [
+    "https://carta-rep-frontend.sandbox.codesandbox.io",  # esempio CodeSandbox React URL
+    "http://localhost:3000",  # per test locale React
+    "*",  # opzionale: permette tutte le origini, usa solo in sviluppo
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,  # oppure ["*"] per sviluppo
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+USER_EMAIL = "alfredo@cartarep.com"  # sostituisci con la tua email se serve
 
 @app.get("/contacts")
 def get_contacts():
